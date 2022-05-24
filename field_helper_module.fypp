@@ -80,7 +80,8 @@ CONTAINS
   END FUNCTION ${field_type_name}$_GET_LAST_CONTIGUOUS_DIMENSION
 
   SUBROUTINE ${field_type_name}$_COPY (HST, DEV, KDIR)
-  ${dtype}$, POINTER :: HST (${shapes[rank]}$), DEV (${shapes[rank]}$)
+  ${dtype}$, POINTER :: HST (${shapes[rank]}$)
+  ${dtype}$, POINTER, DEVICE :: DEV (${shapes[rank]}$)
   INTEGER (KIND=JPIM), INTENT (IN) :: KDIR
   INTEGER (KIND=JPIM) :: JDIM
 
@@ -98,7 +99,8 @@ CONTAINS
 #:for d in range (0, rank+1)
     SUBROUTINE COPY_DIM${d}$_CONTIGUOUS (HST, DEV, KDIR)
     USE OPENACC
-    ${dtype}$, POINTER :: HST (${shapes[rank]}$), DEV (${shapes[rank]}$)
+    ${dtype}$, POINTER :: HST (${shapes[rank]}$)
+    ${dtype}$, POINTER, DEVICE :: DEV (${shapes[rank]}$)
     INTEGER (KIND=JPIM), INTENT (IN) :: KDIR
     INTEGER (KIND=JPIM) :: ISIZE
     INTEGER :: ${', '.join (['J'] + list (map (lambda i: 'J' + str (i+1), range (d, rank))))}$
@@ -114,13 +116,9 @@ CONTAINS
     ${indent}$  ISIZE = KIND (HST) * SIZE (HST (${ar}$))
     #:endif
     ${indent}$  IF (KDIR == NH2D) THEN
-    ${indent}$    !$acc host_data use_device (DEV)
     ${indent}$    CALL ACC_MEMCPY_TO_DEVICE (DEV (${ar}$), HST (${ar}$), ISIZE)
-    ${indent}$    !$acc end host_data
     ${indent}$  ELSEIF (KDIR == ND2H) THEN
-    ${indent}$    !$acc host_data use_device (DEV)
     ${indent}$    CALL ACC_MEMCPY_FROM_DEVICE (HST (${ar}$), DEV (${ar}$), ISIZE)
-    ${indent}$    !$acc end host_data
     ${indent}$  ENDIF
   #:for e in range (d, rank)
     ${'  ' * (rank - e - 1)}$ENDDO
@@ -171,13 +169,12 @@ CONTAINS
     TYPE(${field_type_name}$), POINTER, INTENT (INOUT) :: SELF
     INTEGER (KIND=JPIM),                INTENT (IN) :: MODE
     ${dtype}$, TARGET, SAVE :: ZDUM (${ ', '.join ([dumsize] * (rank-1) + ['1']) }$)
-    ${dtype}$, POINTER :: PTR(${shapes[rank]}$)
+    ${dtype}$, POINTER, DEVICE :: PTR(${shapes[rank]}$)
 
     IF (ASSOCIATED (SELF)) THEN
       IF (IAND (SELF%ISTATUS, NDEVFRESH) == 0) THEN
         IF (.NOT. ASSOCIATED (SELF%DEVPTR)) THEN
           ALLOCATE (SELF%DEVPTR, MOLD=SELF%PTR)
-          !$acc enter data create (SELF%DEVPTR)
         ENDIF
         CALL ${field_type_name}$_COPY (SELF%PTR, SELF%DEVPTR, NH2D)
         SELF%ISTATUS = IOR (SELF%ISTATUS, NDEVFRESH)
@@ -194,7 +191,7 @@ CONTAINS
 
   FUNCTION ${field_type_name}$_GET_DEVICE_DATA_RDONLY (SELF) RESULT (PTR)
     TYPE(${field_type_name}$), POINTER, INTENT (INOUT) :: SELF
-    ${dtype}$, POINTER :: PTR(${shapes[rank]}$)
+    ${dtype}$, POINTER, DEVICE :: PTR(${shapes[rank]}$)
 
     PTR => ${field_type_name}$_GET_DEVICE_DATA_ (SELF, NRD)
 
@@ -202,7 +199,7 @@ CONTAINS
 
   FUNCTION ${field_type_name}$_GET_DEVICE_DATA_RDWR (SELF) RESULT (PTR)
     TYPE(${field_type_name}$), POINTER, INTENT (INOUT) :: SELF
-    ${dtype}$, POINTER :: PTR(${shapes[rank]}$)
+    ${dtype}$, POINTER, DEVICE :: PTR(${shapes[rank]}$)
 
     PTR => ${field_type_name}$_GET_DEVICE_DATA_ (SELF, IOR (NRD, NWR))
 

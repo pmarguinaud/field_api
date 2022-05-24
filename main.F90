@@ -7,7 +7,8 @@ REAL (KIND=JPRB), ALLOCATABLE :: ZDATA3 (:,:,:)
 TYPE (FIELD_3D), POINTER :: YLF3
 TYPE (FIELD_4D), POINTER :: YLF4
 
-REAL (KIND=JPRB), POINTER  :: Z3 (:,:,:), Z4 (:,:,:,:)
+REAL (KIND=JPRB), POINTER  :: Z3HST (:,:,:), Z4HST (:,:,:,:)
+REAL (KIND=JPRB), POINTER, DEVICE  :: Z3DEV (:,:,:), Z4DEV (:,:,:,:)
 
 
 NFLEVG =  9
@@ -30,67 +31,67 @@ YLF3 = FIELD_3D (DATA=ZDATA3 (:,1:3,:), PERSISTENT=.TRUE.)
 
 PRINT *, '-----------  HOST  ----------- R '
 WRITE (*, '(B32.32)') YLF3%ISTATUS
-Z3 => GET_HOST_DATA_RDONLY (YLF3)
+Z3HST => GET_HOST_DATA_RDONLY (YLF3)
 WRITE (*, '(B32.32)') YLF3%ISTATUS
 
 DO JLON = 1, NPROMA
-  PRINT *, JLON, Z3 (JLON,1,1)
+  PRINT *, JLON, Z3HST (JLON,1,1)
 ENDDO
 
 PRINT *, '----------- DEVICE ----------- R '
 WRITE (*, '(B32.32)') YLF3%ISTATUS
-Z3 => GET_DEVICE_DATA_RDONLY (YLF3)
+Z3DEV => GET_DEVICE_DATA_RDONLY (YLF3)
 WRITE (*, '(B32.32)') YLF3%ISTATUS
 
-!$acc serial present (Z3)
+!$acc serial 
 DO JLON = 1, NPROMA
-  PRINT *, JLON, Z3 (JLON,1,1)
+! PRINT *, JLON, Z3DEV (JLON,1,1)
 ENDDO
 !$acc end serial
 
 PRINT *, '----------- DEVICE ----------- W '
 WRITE (*, '(B32.32)') YLF3%ISTATUS
-Z3 => GET_DEVICE_DATA_RDWR (YLF3)
+Z3DEV => GET_DEVICE_DATA_RDWR (YLF3)
 WRITE (*, '(B32.32)') YLF3%ISTATUS
 
-!$acc serial present (Z3)
+!$acc serial 
 DO JLON = 1, NPROMA
-   Z3 (JLON,1,1) = REAL (JLON * JLON, 8)
+   Z3DEV (JLON,1,1) = REAL (JLON * JLON, 8)
 ENDDO
 !$acc end serial
 
 PRINT *, '-----------  HOST  ----------- R '
 WRITE (*, '(B32.32)') YLF3%ISTATUS
-Z3 => GET_HOST_DATA_RDONLY (YLF3)
+Z3HST => GET_HOST_DATA_RDONLY (YLF3)
 WRITE (*, '(B32.32)') YLF3%ISTATUS
 
 DO JLON = 1, NPROMA
-  PRINT *, JLON, Z3 (JLON,1,1)
+  PRINT *, JLON, Z3HST (JLON,1,1)
 ENDDO
 
 CALL YLF3%FINAL
 
 CALL CREATE_TEMPORARY_LU (YLF4, UBOUNDS=[10, 15, 3, 5], LBOUNDS=[1, 0, 1, 1])
 
-Z4 => GET_HOST_DATA_RDWR (YLF4)
-WRITE (*, *) " LBOUND (Z4) = ", LBOUND (Z4)
-WRITE (*, *) " UBOUND (Z4) = ", UBOUND (Z4)
+Z4HST => GET_HOST_DATA_RDWR (YLF4)
+WRITE (*, *) " LBOUND (Z4) = ", LBOUND (Z4HST)
+WRITE (*, *) " UBOUND (Z4) = ", UBOUND (Z4HST)
 
 DO I = 1, 10
-  Z4 (I,:,:,:) = 3.14 * REAL (I, 8)
+  Z4HST (I,:,:,:) = 3.14 * REAL (I, 8)
 ENDDO
 
-Z4 => GET_DEVICE_DATA_RDWR (YLF4)
+Z4DEV => GET_DEVICE_DATA_RDWR (YLF4)
 
-!$acc serial present (Z4)
-PRINT *, Z4 (1, 0, 1, 1)
-PRINT *, Z4 (2, 1, 1, 1)
-Z4 (:,2,:,:) = 0.
+!$acc serial 
+!PRINT *, Z4DEV (1, 0, 1, 1)
+!PRINT *, Z4DEV (2, 1, 1, 1)
+Z4DEV (:,2,:,:) = 0.
 !$acc end serial
 
-Z4 => GET_HOST_DATA_RDONLY (YLF4)
+Z4HST => GET_HOST_DATA_RDONLY (YLF4)
 
-PRINT *, Z4 (1,:,1,1)
+PRINT *, Z4HST (1,:,1,1)
 
 CALL YLF4%FINAL
 
