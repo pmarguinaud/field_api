@@ -34,6 +34,9 @@ target_link_libraries(${LIBNAME} PUBLIC OpenMP::OpenMP_Fortran)
 add_executable(main.x main.F90)
 target_link_libraries(main.x PUBLIC ${LIBNAME})
 
+add_executable(pointer_to_owner_wrapper.x pointer_to_owner_wrapper.F90)
+target_link_libraries(pointer_to_owner_wrapper.x PUBLIC ${LIBNAME})
+
 add_executable(cuda.x cuda.F90)
 target_link_libraries(cuda.x PUBLIC ${LIBNAME})
 

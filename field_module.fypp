@@ -64,6 +64,7 @@ TYPE, ABSTRACT :: ${field_type_name}$
 
 CONTAINS
 
+  PROCEDURE :: FINAL => ${field_type_name}$_FINAL
   PROCEDURE :: ${field_type_name}$_FINAL
   PROCEDURE :: DELETE_DEVICE => ${field_type_name}$_DELETE_DEVICE
   PROCEDURE :: GET_VIEW => ${field_type_name}$_GET_VIEW
