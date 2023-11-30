@@ -91,8 +91,8 @@ if( NOT fiat_FOUND )
 endif()
 
 list(APPEND srcs dev_alloc.c 
-dev_alloc_module.F90       field_4rd_module.F90    field_constants_module.F90         field_module.F90
-field_4rd_gang_module.F90  field_basic_module.F90  field_init_debug_value_module.F90)
+dev_alloc_module.F90       field_4rd_module.F90    field_module.F90
+field_4rd_gang_module.F90  field_basic_module.F90  )
 
 foreach(prec ${precisions})
   ## add field_api target
