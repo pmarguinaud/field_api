@@ -90,31 +90,9 @@ if( NOT fiat_FOUND )
   list(APPEND srcs ${ABOR1_PATH} ${OML_PATH} ${PARKIND1_PATH})
 endif()
 
-list(APPEND srcs field_basic_module.F90 field_init_debug_value_module.F90 dev_alloc.c field_constants_module.F90)
-
-## preprocess fypp files
-foreach (SUFF IN ITEMS RD)
-  string (TOLOWER ${SUFF} suff)
-  foreach (RANK RANGE 4 4)
-    foreach (FUNC IN ITEMS "_module" _gang_module)
-      add_custom_command (OUTPUT field_${RANK}${suff}${FUNC}.F90
-	      COMMAND ${FYPP} -DRANK=${RANK} -DSUFF='${SUFF}' -m os -M ${CMAKE_CURRENT_SOURCE_DIR} -m fieldType 
-        ${CMAKE_CURRENT_SOURCE_DIR}/field_RANKSUFF${FUNC}.fypp > field_${RANK}${suff}${FUNC}.F90
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/field_RANKSUFF${FUNC}.fypp
-        VERBATIM)
-      list(APPEND srcs "field_${RANK}${suff}${FUNC}.F90")
-    endforeach ()
-  endforeach ()
-endforeach ()
-
-foreach (SRC IN ITEMS dev_alloc_module 
-         field_module)
-  add_custom_command (OUTPUT ${SRC}.F90
-	  COMMAND ${FYPP} -m os -M ${CMAKE_CURRENT_SOURCE_DIR} -m fieldType ${CMAKE_CURRENT_SOURCE_DIR}/${SRC}.fypp > ${SRC}.F90
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${SRC}.fypp
-    VERBATIM)
-  list(APPEND srcs "${SRC}.F90")
-endforeach ()
+list(APPEND srcs dev_alloc.c 
+dev_alloc_module.F90       field_4rd_module.F90    field_constants_module.F90         field_module.F90
+field_4rd_gang_module.F90  field_basic_module.F90  field_init_debug_value_module.F90)
 
 foreach(prec ${precisions})
   ## add field_api target
