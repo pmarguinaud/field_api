@@ -30,11 +30,11 @@ class fieldType (object):
     self.lbptr = ', '.join (list (map (lambda i: "LBOUNDS(" + str (i+1) + "):", range (0, self.rank))))
 
 
-kinds = ['JPRM', 'JPRB', 'JPRD', 'JPIM', 'JPLM']
+kinds = ['JPRD']
 
 
-def getFieldTypeList (ranks=[2,3,4,5], kinds=kinds):
+def getFieldTypeList (ranks=[4], kinds=kinds):
   return [fieldType (kind=kind, rank=rank) for (kind) in kinds for rank in ranks]
 
 def useParkind1 (kinds=kinds):
-  return 'USE PARKIND1, ONLY : ' + ', '.join (kinds)
+  return 'USE PARKIND1' 

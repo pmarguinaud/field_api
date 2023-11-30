@@ -93,9 +93,9 @@ endif()
 list(APPEND srcs field_basic_module.F90 field_init_debug_value_module.F90 dev_alloc.c field_constants_module.F90)
 
 ## preprocess fypp files
-foreach (SUFF IN ITEMS IM RM RB RD LM)
+foreach (SUFF IN ITEMS RD)
   string (TOLOWER ${SUFF} suff)
-  foreach (RANK RANGE 2 5)
+  foreach (RANK RANGE 4 4)
     foreach (FUNC IN ITEMS "_module" _gang_module)
       add_custom_command (OUTPUT field_${RANK}${suff}${FUNC}.F90
 	      COMMAND ${FYPP} -DRANK=${RANK} -DSUFF='${SUFF}' -m os -M ${CMAKE_CURRENT_SOURCE_DIR} -m fieldType 
