@@ -490,7 +490,8 @@ DO JBLK = 1, NGPBLKS
   ENDDO
 ENDDO
 
-CALL CHECK_STATUS
+! STATUS doesn't need to be synchronised for RDONLY calls to buffer
+! CALL CHECK_STATUS
 
 END SUBROUTINE
 
@@ -529,7 +530,8 @@ ENDDO
 
 !$acc end serial
 
-CALL CHECK_STATUS
+! STATUS doesn't need to be synchronised for RDONLY calls to buffer
+! CALL CHECK_STATUS
 
 END SUBROUTINE
 
@@ -599,7 +601,8 @@ DO JDIM = 1, SIZE (KFLD)
     ENDDO
   ENDDO
 
-  CALL CHECK_STATUS
+! STATUS is only synced when calling GET/SYNC_HOST/DEVICE methods are called on BUFFER
+! CALL CHECK_STATUS
 
 ENDDO
 
@@ -616,7 +619,8 @@ CALL PLOG ("SET_DEVICE_YLF3", KFLD)
 
 DO JDIM = 1, SIZE (KFLD)
 
-  CALL CHECK_STATUS
+! STATUS is only synced when calling GET/SYNC_HOST/DEVICE methods are called on BUFFER
+! CALL CHECK_STATUS
 
   JFLD = KFLD (JDIM)
 
@@ -626,7 +630,8 @@ DO JDIM = 1, SIZE (KFLD)
 
   ZDEVICE3 => GET_DEVICE_DATA_RDWR (YLF3L (JFLD)%PTR)
 
-  CALL CHECK_STATUS
+! STATUS is only synced when calling GET/SYNC_HOST/DEVICE methods are called on BUFFER
+! CALL CHECK_STATUS
 
   CALL CHECK_DIMS_YLF3 (ZDEVICE3)
 
@@ -645,7 +650,8 @@ DO JDIM = 1, SIZE (KFLD)
 !$acc end serial
 
 
-  CALL CHECK_STATUS
+! STATUS is only synced when calling GET/SYNC_HOST/DEVICE methods are called on BUFFER
+! CALL CHECK_STATUS
 
 ENDDO
 
@@ -692,7 +698,8 @@ DO JDIM = 1, SIZE (KFLD)
 !$acc end serial
 
 
-  CALL CHECK_STATUS
+! STATUS is only synced when calling GET/SYNC_HOST/DEVICE methods are called on BUFFER
+! CALL CHECK_STATUS
 
 ENDDO
 
@@ -732,7 +739,8 @@ DO JDIM = 1, SIZE (KFLD)
     ENDDO
   ENDDO
 
-  CALL CHECK_STATUS
+! STATUS is only synced when calling GET/SYNC_HOST/DEVICE methods are called on BUFFER
+! CALL CHECK_STATUS
 
 ENDDO
 

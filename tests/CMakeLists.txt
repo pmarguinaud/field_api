@@ -65,7 +65,7 @@ list(APPEND TEST_FILES
 	test_crc64.F90
 	test_field_gang_sparse_copy.F90
 	wrapper_modify_gpu.F90
-        test_gang.F90
+	test_gang.F90
 	)
 
 #Place-holder for failing tests
