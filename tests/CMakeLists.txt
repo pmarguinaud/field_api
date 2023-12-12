@@ -63,6 +63,7 @@ list(APPEND TEST_FILES
 	sync_device.F90
 	sync_host.F90
 	test_crc64.F90
+	test_field_gang_sparse_copy.F90
 	wrapper_modify_gpu.F90
         test_gang.F90
 	)
