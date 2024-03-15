@@ -53,11 +53,20 @@ PRINT *, " TOTO2 OK"
 
 !$acc serial present (ZDEV)
 
-CALL TOTO3 (ZDEV (:,:,:))
+!CALL TOTO3 (ZDEV (:,:,:))
+CALL TOTO3 (ZDEV)
 
 !$acc end serial
 
 PRINT *, " TOTO3 OK"
+
+!$acc serial present (ZDEV)
+
+CALL TOTO4 (ZDEV (:,11:20,:))
+
+!$acc end serial
+
+PRINT *, " TOTO4 OK"
 
 
 CONTAINS
@@ -75,6 +84,14 @@ SUBROUTINE TOTO3 (P)
 !$acc routine (TOTO3) seq
 
 REAL*8 :: P (2077,170,5)
+
+END SUBROUTINE
+
+SUBROUTINE TOTO4 (P) 
+
+!$acc routine (TOTO4) seq
+
+REAL*8 :: P (2077,10,5)
 
 END SUBROUTINE
 
