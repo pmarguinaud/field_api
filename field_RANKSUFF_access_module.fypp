@@ -96,6 +96,7 @@ CONTAINS
       WRITE (0, '(A10)', ADVANCE='NO') CLF
       CLF = "${what}$"
       WRITE (0, '(A10)', ADVANCE='NO') CLF
+      WRITE (0, '(" ",Z16.16," ")') LOC (FIELD_PTR)
     ENDIF
 
     IF (GET_DEBUG_PRINT_LOCATION) THEN
