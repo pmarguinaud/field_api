@@ -31,13 +31,13 @@ ecbuild_find_package(OpenMP COMPONENTS Fortran REQUIRED)
 ecbuild_find_package( fckit )
 find_program( FYPP fypp )
 
-if( fckit_FOUND AND fckit_HAVE_FCKIT_VENV )
-  set( FYPP ${FCKIT_VENV_EXE} -m fypp )
-elseif( FYPP MATCHES FYPP-NOTFOUND )
+#if( fckit_FOUND AND fckit_HAVE_FCKIT_VENV )
+#  set( FYPP ${FCKIT_VENV_EXE} -m fypp )
+#elseif( FYPP MATCHES FYPP-NOTFOUND )
   include(cmake/field_api_fetchcontent_fypp.cmake)
   set(FYPP ${fypp_SOURCE_DIR}/bin/fypp)
   ecbuild_info("fypp downloaded to: ${FYPP}")
-endif()
+#endif()
 
 ## find OpenACC
 ### Workaround for CMake bug (fixed in CMake 3.25)
