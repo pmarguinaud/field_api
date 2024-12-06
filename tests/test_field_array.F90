@@ -16,24 +16,35 @@ PROGRAM TEST_FIELD_ARRAY_WRAPPER
         IMPLICIT NONE
         TYPE(FIELD_2RB_ARRAY) :: W
         REAL(KIND=JPRB), ALLOCATABLE :: D(:,:)
+        INTEGER :: LDIM (2), J
 
-        IF(ASSOCIATED(W%F_P)) CALL FIELD_ABORT ("FIELD_ARRAY SHOULD REMAIN UNINITIALISED")
+        LDIM = [10, 0]
 
-        ALLOCATE(D(10,10))
-        D=7
+        DO J = 1, 2
 
-        CALL W%INIT(D)
-        D=42
+          IF(ASSOCIATED(W%F_P)) CALL FIELD_ABORT ("FIELD_ARRAY SHOULD REMAIN UNINITIALISED")
 
-        IF (.NOT. ALL(W%F_P%PTR == 42)) THEN
-           CALL FIELD_ABORT ("ERROR")
-        END IF 
-        CALL W%FINAL()
+          ALLOCATE(D(10,LDIM (J)))
+          D=7
+
+          CALL W%INIT(D)
+          D=42
+
+          IF (.NOT. ALL(W%F_P%PTR == 42)) THEN
+             CALL FIELD_ABORT ("ERROR")
+          END IF 
+
+          CALL W%FINAL()
+
+          DEALLOCATE(D)
+
+        ENDDO
 
         CALL W%INIT (UBOUNDS=[10,2])
 
         CALL W%FINAL ()
 
         IF(ASSOCIATED(W%F_P)) CALL FIELD_ABORT ("FIELD_ARRAY SHOULD HAVE BEEN NULLIFIED")
-        DEALLOCATE(D)
+
+
 END PROGRAM TEST_FIELD_ARRAY_WRAPPER
