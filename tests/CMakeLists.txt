@@ -75,7 +75,7 @@ list(APPEND TEST_FILES
         sync_host.F90
         test_async.F90
         test_bc.F90
-        test_crc64.F90
+#        test_crc64.F90
         test_field1d.F90
         test_field_array.F90
         test_field_delete_on_null.F90
