@@ -32,6 +32,17 @@ PROGRAM CPU_TO_GPU
         CALL O%GET_DEVICE_DATA_RDONLY(PTR_DEV)
 
         OKAY=.TRUE.
+
+        CALL KERNEL()
+
+        IF(OKAY .EQV. .FALSE.)THEN
+                CALL FIELD_ABORT ("ERROR")
+        ENDIF
+        CALL FIELD_DELETE(O)
+
+        CONTAINS
+
+        SUBROUTINE KERNEL
 #ifdef OMPGPU
         !$OMP TARGET MAP(TO:PTR_DEV) MAP(TOFROM:OKAY)
 #else
@@ -49,8 +60,5 @@ PROGRAM CPU_TO_GPU
 #else
         !$ACC END PARALLEL
 #endif
-        IF(OKAY .EQV. .FALSE.)THEN
-                CALL FIELD_ABORT ("ERROR")
-        ENDIF
-        CALL FIELD_DELETE(O)
+        END SUBROUTINE KERNEL
 END PROGRAM CPU_TO_GPU

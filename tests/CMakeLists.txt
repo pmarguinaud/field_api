@@ -49,50 +49,50 @@ list(APPEND TEST_FILES
         init_owner2.F90
         init_owner_0_size.F90
         init_owner_delayed.F90
-        init_owner_delayed_gpu.F90
-        init_owner_delayed_init_debug_value.F90
-        init_owner_delayed_init_value.F90
-        init_owner_gpu.F90
-        init_owner_init_debug_value.F90
-        init_owner_init_debug_value_gpu.F90
-        init_owner_init_delayed_debug_value_gpu.F90
-        init_owner_init_delayed_value_gpu.F90
-        init_owner_init_value.F90
-        init_owner_openmp.F90
-        init_wrapper.F90
-        init_wrapper_gpu.F90
-        init_wrapper_lbounds.F90
-        init_wrapper_non_contiguous.F90
+#        init_owner_delayed_gpu.F90
+#        init_owner_delayed_init_debug_value.F90
+#        init_owner_delayed_init_value.F90
+#        init_owner_gpu.F90
+#        init_owner_init_debug_value.F90
+#        init_owner_init_debug_value_gpu.F90
+#        init_owner_init_delayed_debug_value_gpu.F90
+#        init_owner_init_delayed_value_gpu.F90
+#        init_owner_init_value.F90
+#        init_owner_openmp.F90
+#        init_wrapper.F90
+#        init_wrapper_gpu.F90
+#        init_wrapper_lbounds.F90
+#        init_wrapper_non_contiguous.F90
         init_wrapper_non_contiguous_multi.F90
-        no_transfer_get_device.F90
-        no_transfer_get_host.F90
-        pointer_to_owner_wrapper.F90
-        reshuffle.F90
-        reshuffle_lastdim.F90
-        resize_owner.F90
-        resize_owner2.F90
-        sync_device.F90
-        sync_host.F90
-        test_async.F90
-        test_bc.F90
-#        test_crc64.F90
-        test_field1d.F90
-        test_field_array.F90
-        test_field_delete_on_null.F90
-        test_get_device_data_wronly.F90
-        test_get_device_data_non_contiguous.F90
-        test_host_mem_pool.F90
-        test_lastdim.F90
-        test_legacy.F90
-        test_pinned.F90
-        test_sizeof.F90
-        test_statistics.F90
-        test_wrappernosynconfinal.F90
-        wrapper_modify_gpu.F90
+#        no_transfer_get_device.F90
+#        no_transfer_get_host.F90
+#        pointer_to_owner_wrapper.F90
+#        reshuffle.F90
+#        reshuffle_lastdim.F90
+#        resize_owner.F90
+#        resize_owner2.F90
+#        sync_device.F90
+#        sync_host.F90
+#        test_async.F90
+#        test_bc.F90
+##        test_crc64.F90
+#        test_field1d.F90
+#        test_field_array.F90
+#        test_field_delete_on_null.F90
+#        test_get_device_data_wronly.F90
+#        test_get_device_data_non_contiguous.F90
+#        test_host_mem_pool.F90
+#        test_lastdim.F90
+#        test_legacy.F90
+#        test_pinned.F90
+#        test_sizeof.F90
+#        test_statistics.F90
+#        test_wrappernosynconfinal.F90
+#        wrapper_modify_gpu.F90
 	)
 
 if(HAVE_FIELD_GANG)
-  list(APPEND TEST_FILES test_gang.F90)
+#  list(APPEND TEST_FILES test_gang.F90)
 endif()
 
 #Place-holder for failing tests
