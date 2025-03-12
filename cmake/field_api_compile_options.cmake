@@ -36,8 +36,8 @@ macro( field_api_compile_options )
     ecbuild_add_fortran_flags("-check nocontiguous" BUILD DEBUG)
   endif()
 
-  if(CMAKE_Fortran_COMPILER_ID MATCHES LLVMFlang)
-    ecbuild_add_fortran_flags("-fPIC")
+  if(CMAKE_Fortran_COMPILER MATCHES amdflang)
+    ecbuild_remove_fortran_flags("-g")
   endif()
 
 endmacro()
