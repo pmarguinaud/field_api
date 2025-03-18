@@ -52,7 +52,7 @@ list(APPEND TEST_FILES
 #        init_owner_delayed_gpu.F90
 #        init_owner_delayed_init_debug_value.F90
 #        init_owner_delayed_init_value.F90
-#        init_owner_gpu.F90
+        init_owner_gpu.F90
 #        init_owner_init_debug_value.F90
 #        init_owner_init_debug_value_gpu.F90
 #        init_owner_init_delayed_debug_value_gpu.F90
@@ -60,7 +60,7 @@ list(APPEND TEST_FILES
 #        init_owner_init_value.F90
 #        init_owner_openmp.F90
 #        init_wrapper.F90
-#        init_wrapper_gpu.F90
+        init_wrapper_gpu.F90
 #        init_wrapper_lbounds.F90
 #        init_wrapper_non_contiguous.F90
         init_wrapper_non_contiguous_multi.F90

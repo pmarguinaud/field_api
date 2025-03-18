@@ -352,41 +352,24 @@ PROGRAM INIT_WRAPPER_NON_CONTIGUOUS_MULTI
 !  IF (ANY(D1/=D2)) ERROR STOP
 !  PRINT *, "end 15"
 !  PRINT *, ""
-!
-!  PRINT *, "begin 16 (should call FIELD_5RB_COPY_2D_DIM3_4_CONTIGUOUS)"
-!#ifdef _CUDA
-!  CALL FIELD_NEW(W5, DATA=D1(:,:,:,3:12:3,:), MAP_DEVPTR=.FALSE.)
-!#else
-!  CALL FIELD_NEW(W5, DATA=D1(:,:,:,3:12:3,:), MAP_DEVPTR=.TRUE.)
-!#endif
-!  CALL W5%GET_DEVICE_DATA_RDWR(W5PTR)
-!
-!#ifdef OMPGPU
-!#ifdef _CUDA
-!  !$OMP TARGET IS_DEVICE_PTR(W5PTR)
-!#else
-!  !$OMP TARGET MAP(TO:W5PTR)
-!#endif
-!#else
-!#ifdef _CUDA
-!  !$ACC KERNELS DEVICEPTR(W5PTR)
-!#else
-!  !$ACC KERNELS PRESENT(W5PTR)
-!#endif
-!#endif
-!  W5PTR(:,:,:,:,:)=19
-!#ifdef OMPGPU
-!  !$OMP END TARGET
-!#else
-!  !$ACC END KERNELS
-!#endif
-!  D1 = -1
-!  D2 = -1
-!  D2(:,:,:,3:12:3,:)=19
-!  CALL FIELD_DELETE(W5)
-!  IF (ANY(D1/=D2)) ERROR STOP
-!  PRINT *, "end 16"
-!  PRINT *, ""
+
+  PRINT *, "begin 16 (should call FIELD_5RB_COPY_2D_DIM3_4_CONTIGUOUS)"
+#ifdef _CUDA
+  CALL FIELD_NEW(W5, DATA=D1(:,:,:,3:12:3,:), MAP_DEVPTR=.FALSE.)
+#else
+  CALL FIELD_NEW(W5, DATA=D1(:,:,:,3:12:3,:), MAP_DEVPTR=.TRUE.)
+#endif
+  CALL W5%GET_DEVICE_DATA_RDWR(W5PTR)
+
+  CALL KERNEL_16()
+
+  D1 = -1
+  D2 = -1
+  D2(:,:,:,3:12:3,:)=19
+  CALL FIELD_DELETE(W5)
+  IF (ANY(D1/=D2)) ERROR STOP
+  PRINT *, "end 16"
+  PRINT *, ""
 
   CONTAINS
 
@@ -421,5 +404,29 @@ PROGRAM INIT_WRAPPER_NON_CONTIGUOUS_MULTI
 #endif
 
   END SUBROUTINE KERNEL_2
+
+  SUBROUTINE KERNEL_16()
+
+#ifdef OMPGPU
+#ifdef _CUDA
+  !$OMP TARGET IS_DEVICE_PTR(W5PTR)
+#else
+  !$OMP TARGET MAP(TO:W5PTR)
+#endif
+#else
+#ifdef _CUDA
+  !$ACC KERNELS DEVICEPTR(W5PTR)
+#else
+  !$ACC KERNELS PRESENT(W5PTR)
+#endif
+#endif
+  W5PTR(:,:,:,:,:)=19
+#ifdef OMPGPU
+  !$OMP END TARGET
+#else
+  !$ACC END KERNELS
+#endif
+
+  END SUBROUTINE KERNEL_16
 
 END PROGRAM INIT_WRAPPER_NON_CONTIGUOUS_MULTI
