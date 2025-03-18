@@ -76,7 +76,7 @@ ecbuild_add_option( FEATURE FIELD_GANG
 if(HAVE_BUDDY_MALLOC)
   list( APPEND fypp_defines "-DUSE_BUDDY_MALLOC")
 endif()
-if(HAVE_CUDA)
+if(HAVE_CUDA OR HAVE_HIPFORT)
   list( APPEND fypp_defines "-DWITH_HIC")
 endif()
 if(fiat_FOUND)
@@ -125,6 +125,7 @@ foreach(prec ${precisions})
       PRIVATE_LIBS
          $<${fiat_FOUND}:fiat>
          $<${fiat_FOUND}:parkind_${prec}>
+         $<${HAVE_HIPFORT}:hipfort::hip>
          OpenMP::OpenMP_Fortran
       )
 

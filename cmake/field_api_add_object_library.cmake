@@ -60,6 +60,7 @@ macro(field_api_add_object_library)
            $<${HAVE_ACC}:OpenACC::OpenACC_Fortran>
            $<${fiat_FOUND}:fiat>
            $<${fiat_FOUND}:parkind_${DEFAULT_PRECISION}>
+           $<${HAVE_HIPFORT}:hipfort::hip>
            OpenMP::OpenMP_Fortran
         )
 
