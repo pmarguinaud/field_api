@@ -135,6 +135,9 @@ END SUBROUTINE
 
 SUBROUTINE PRINT_AND_ASSIGN_DEVICE_Z4
 
+INTEGER :: I, J, K
+CALL FIELD_NEW (YLF4, LBOUNDS=[1, 0, 1, 1], UBOUNDS=[10, 15, 3, 5], PERSISTENT=.TRUE.)
+
 #ifdef OMPGPU
 !$omp target map(to:Z4)
 #else
@@ -142,7 +145,13 @@ SUBROUTINE PRINT_AND_ASSIGN_DEVICE_Z4
 #endif
 !PRINT *, Z4 (1, 0, 1, 1)
 !PRINT *, Z4 (2, 1, 1, 1)
-Z4 (:,2,:,:) = 0.
+DO K=1,5
+  DO J=1,3
+    DO I=1,10
+      Z4 (I,2,J,K) = 0.
+    ENDDO
+  ENDDO
+ENDDO
 #ifdef OMPGPU
 !$omp end target
 #else

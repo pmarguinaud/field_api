@@ -20,7 +20,7 @@ PROGRAM GET_VIEW_GET_DEVICE_DATA
 
         CLASS(FIELD_2IM), POINTER :: O => NULL()
         INTEGER, PARAMETER :: NPROMA = 24
-        INTEGER :: IBLK,JLON
+        INTEGER :: IBLK,JLON,MXTHREADS
         INTEGER(KIND=JPIM), POINTER :: VIEW(:) => NULL()
         INTEGER(KIND=JPIM), POINTER :: PTR(:,:) => NULL()
         LOGICAL :: OKAY
@@ -36,6 +36,8 @@ PROGRAM GET_VIEW_GET_DEVICE_DATA
         END DO
         !$OMP END DO
         !$OMP END PARALLEL
+
+        MXTHREADS = OML_MAX_THREADS()
 
         CALL O%GET_DEVICE_DATA_RDWR(PTR)
         OKAY=.TRUE.
@@ -56,9 +58,15 @@ PROGRAM GET_VIEW_GET_DEVICE_DATA
 #else
         !$ACC SERIAL PRESENT(PTR) COPY(OKAY)
 #endif
-        IF(.NOT. ALL(PTR == 7))THEN
+        DO IBLK=1,MXTHREADS
+          DO JLON = 1, NPROMA
+
+            IF(PTR(JLON,IBLK) /= 7)THEN
                 OKAY=.FALSE.
-        ENDIF
+            ENDIF
+
+          ENDDO
+        ENDDO
 #ifdef OMPGPU
         !$OMP END TARGET
 #else
