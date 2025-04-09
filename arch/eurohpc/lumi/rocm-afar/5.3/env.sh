@@ -30,8 +30,10 @@ module_load PrgEnv-cray/8.4.0
 module_load buildtools/24.03
 
 # Set environment variables for flang
-export LD_LIBRARY_PATH=/users/nawabahm/rocm-afar-7110-drop-5.3.0/lib:/users/nawabahm/rocm-afar-7110-drop-5.3.0/lib/llvm/lib:$LD_LIBRARY_PATH
-export PATH=/users/nawabahm/rocm-afar-7110-drop-5.3.0/bin:$PATH
+LD_LIBRARY_PATH=/users/nawabahm/rocm-afar-7110-drop-5.3.0/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=/users/nawabahm/rocm-afar-7110-drop-5.3.0/lib/llvm/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+export PATH=/users/nawabahm/rocm-afar-7110-drop-5.3.0/lib/llvm/bin:/users/nawabahm/rocm-afar-7110-drop-5.3.0/bin:$PATH
 export hipfort_ROOT=/users/nawabahm/hipfort/install
 
 # Export environment variable3s
