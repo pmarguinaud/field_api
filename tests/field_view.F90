@@ -76,11 +76,11 @@ PROGRAM FIELD_VIEW
             ENDIF
 
           DO JLEV = 1,KLEV
-            !$acc data present(zz3(:,jlev,:)) if(LDACC)
-            !$ACC HOST_DATA USE_DEVICE (ZZ3 (:, JLEV, :)) IF (LDACC)
+!!!         !$acc data present(zz3(:,jlev,:)) if(LDACC)
+!!!         !$ACC HOST_DATA USE_DEVICE (ZZ3 (:, JLEV, :)) IF (LDACC)
             VIEWS_A(JLEV)%P => ZZ3 (:, :, JLEV)
-            !$ACC END HOST_DATA
-            !$acc end data
+!!!         !$ACC END HOST_DATA
+!!!         !$acc end data
           ENDDO
 
           DO JLEV = 1,KLEV
@@ -94,6 +94,7 @@ PROGRAM FIELD_VIEW
                 ZZ2(:,:) = B(:,:,JLEV)
               ENDIF
               !$acc end kernels
+              
             ELSE
               IF (A2B) THEN
                 B(:,:,JLEV) = ZZ2(:,:)
@@ -106,6 +107,13 @@ PROGRAM FIELD_VIEW
           WRITE(*,*) "JINIT", JINIT
           WRITE(*,*) "LDACC", LDACC
           WRITE(*,*) "A2B",A2B
+
+          IF (LDACC) THEN
+            ! Synchronize on host before testing values
+            ZZ3 => GET_HOST_DATA_RDONLY (FIELD_A)
+            !$acc update host (B)
+          ENDIF
+      
           IF ( .NOT. ALL(A == JINIT))THEN
             WRITE(*,*) "A Not correct", JINIT
             CALL FIELD_ABORT ("ERROR")

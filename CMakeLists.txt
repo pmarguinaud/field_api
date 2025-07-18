@@ -45,6 +45,8 @@ elseif( FYPP MATCHES FYPP-NOTFOUND )
   ecbuild_info("fypp downloaded to: ${FYPP}")
 endif()
 
+  set( FYPP fypp)
+
 ## find OpenACC
 if( ${CMAKE_VERSION} VERSION_LESS "3.25" )
   if ( FIELD_API_ENABLE_ACC OR (NOT DEFINED FIELD_API_ENABLE_ACC AND (ENABLE_ACC OR NOT DEFINED ENABLE_ACC)) )
