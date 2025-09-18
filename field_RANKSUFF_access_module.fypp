@@ -44,7 +44,7 @@ PUBLIC :: GET_${what}$_DATA_${mode}$
 
 #:for ft in fieldTypeList
 ${ft.type}$, TARGET, SAVE :: DUMMY_${ft.name}$ (${ ', '.join ([dumsize] * (ft.rank-1) + ['1']) }$)
-!$acc declare create (DUMMY_${ft.name}$)
+LOGICAL, SAVE :: LDUMMY_${ft.name}$_CREATED = .FALSE.
 
 #:endfor
 
@@ -64,6 +64,7 @@ CONTAINS
     CHARACTER*10 :: CLF
     INTEGER :: ILEN, IP1, IP2
 
+    PTR => NULL ()
 
     ICRC = 0
 
@@ -77,13 +78,16 @@ CONTAINS
         ENDIF
 #:endif
 
-      ELSE
-        PTR => DUMMY_${ft.name}$
       ENDIF
-    ELSE
-      PTR => DUMMY_${ft.name}$
     ENDIF
 
+    IF (.NOT. ASSOCIATED (PTR)) THEN
+      IF (.NOT. LDUMMY_${ft.name}$_CREATED) THEN
+        LDUMMY_${ft.name}$_CREATED = .TRUE.
+!$acc enter data create (DUMMY_${ft.name}$)
+      ENDIF
+      PTR => DUMMY_${ft.name}$
+    ENDIF
 
     IF (GET_DEBUG_PRINT_CRC) THEN
       WRITE (0, '(Z16.16," ")', ADVANCE='NO') ICRC

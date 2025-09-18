@@ -188,12 +188,6 @@ endforeach ()
 set_source_files_properties("dev_alloc_module.F90" PROPERTIES COMPILE_OPTIONS $<${HAVE_CUDA}:-cuda>)
 set_source_files_properties("host_alloc_module.F90" PROPERTIES COMPILE_OPTIONS $<${HAVE_CUDA}:-cuda>)
 
-## determine lib type
-cmake_dependent_option(BUILD_SHARED_LIBS "Dynamically link field_api" ON "NOT HAVE_ACC" OFF)
-if( HAVE_ACC )
-  ecbuild_warn("OpenACC builds force static linking.")
-endif()
-
 list(APPEND prec_srcs field_module.F90 field_array_module.F90 field_array_util_module.F90 field_util_module.F90)
 list(REMOVE_ITEM srcs ${prec_srcs})
 
