@@ -9,11 +9,14 @@
 
 MODULE FIELD_${RANK}$${SUFF}$_ARRAY_MODULE
 
+!$ACDC methods --methods-list=host --skip-components cpg --field-api --field-api-class cpg
+
 #:set fieldTypeList = fieldType.getFieldTypeList (ranks=[RANK], kinds=['JP' + str (SUFF)])
 
 #:for ft in fieldTypeList
 USE ${ft.name}$_MODULE
 USE ${ft.name}$_FACTORY_MODULE
+USE ${ft.name}$_UTIL_MODULE
 #:endfor
 
 ${fieldType.useParkind1 ()}$

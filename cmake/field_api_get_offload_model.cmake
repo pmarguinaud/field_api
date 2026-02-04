@@ -21,13 +21,21 @@
 
 macro( field_api_get_offload_model )
 
+execute_process (COMMAND ${CMAKE_Fortran_COMPILER} --version OUTPUT_VARIABLE FC_version)
+
+  if (FC_version MATCHES "AMD AFAR")
+    set (ISROCMAFAR 1)
+  else ()
+    set (ISROCMAFAR 0)
+  endif ()
+
    ## check for OpenMP offload
    include(features/OMP)
    ecbuild_add_option( FEATURE OMP_OFFLOAD 
                        DEFAULT OFF
                        DESCRIPTION "Enable GPU offload via OpenMP"
                        CONDITION
-                         (CMAKE_Fortran_COMPILER_ID MATCHES "PGI|NVHPC" OR  CMAKE_Fortran_COMPILER MATCHES "amdflang")
+                         (CMAKE_Fortran_COMPILER_ID MATCHES "PGI|NVHPC" OR  ISROCMAFAR)
                          AND ${_HAVE_OMP_OFFLOAD}
    )
 
@@ -79,7 +87,7 @@ macro( field_api_get_offload_model )
        else()
           set(FIELD_API_OFFLOAD_MODEL "NVHPCOpenMP")
        endif()
-     elseif( CMAKE_Fortran_COMPILER MATCHES "amdflang")
+     elseif( ISROCMAFAR )
        if( HAVE_HIPFORT )
           set(FIELD_API_OFFLOAD_MODEL "ROCMAFAROpenMPHIP")
        else()
