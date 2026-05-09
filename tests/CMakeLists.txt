@@ -111,6 +111,7 @@ list(APPEND TEST_FILES
         test_get_device_data_wronly.F90
         test_host_mem_pool.F90
         test_lastdim.F90
+        test_zerodim.F90
         test_legacy.F90
         test_pinned.F90
         test_sizeof.F90
