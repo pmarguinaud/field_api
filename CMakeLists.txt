@@ -145,6 +145,40 @@ foreach (SUFF IN ITEMS IM RM RD LM)
   endforeach ()
 endforeach ()
 
+## preprocess collapse fypp files
+foreach (SUFF IN ITEMS IM RM RD LM)
+  string (TOLOWER ${SUFF} suff)
+  foreach (RANK RANGE 1 5)
+    foreach (COLLAPSE IN ITEMS 1 2)
+      foreach (FUNC IN ITEMS _shuffle _gather)
+        add_custom_command (OUTPUT field_${RANK}${suff}${FUNC}_collapse${COLLAPSE}_module.F90
+	      COMMAND ${FYPP} -DRANK=${RANK} -DSUFF='${SUFF}' -DCOLLAPSE=${COLLAPSE} ${fypp_defines} -m os -M ${CMAKE_CURRENT_SOURCE_DIR} -m fieldType
+          ${CMAKE_CURRENT_SOURCE_DIR}/field_RANKSUFF${FUNC}_collapseCOLLAPSE_module.fypp > field_${RANK}${suff}${FUNC}_collapse${COLLAPSE}_module.F90
+          DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/field_RANKSUFF${FUNC}_collapseCOLLAPSE_module.fypp
+          VERBATIM)
+        list(APPEND srcs "field_${RANK}${suff}${FUNC}_collapse${COLLAPSE}_module.F90")
+        set_source_files_properties( "field_${RANK}${suff}${FUNC}_collapse${COLLAPSE}_module.F90" PROPERTIES COMPILE_OPTIONS $<${HAVE_CUDA}:-cuda>)
+      endforeach ()
+    endforeach ()
+  endforeach ()
+endforeach ()
+
+foreach (COLLAPSE IN ITEMS 1 2)
+  add_custom_command (OUTPUT field_gathscat_collapse${COLLAPSE}_module.F90
+	  COMMAND ${FYPP} -DCOLLAPSE=${COLLAPSE} ${fypp_defines} -m os -M ${CMAKE_CURRENT_SOURCE_DIR} -m fieldType
+      ${CMAKE_CURRENT_SOURCE_DIR}/field_gathscat_collapseCOLLAPSE_module.fypp > field_gathscat_collapse${COLLAPSE}_module.F90
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/field_gathscat_collapseCOLLAPSE_module.fypp
+      VERBATIM)
+  list(APPEND srcs "field_gathscat_collapse${COLLAPSE}_module.F90")
+
+  add_custom_command (OUTPUT field_gathscat_collapse${COLLAPSE}_type_module.F90
+	  COMMAND ${FYPP} -DCOLLAPSE=${COLLAPSE} ${fypp_defines} -m os -M ${CMAKE_CURRENT_SOURCE_DIR} -m fieldType
+      ${CMAKE_CURRENT_SOURCE_DIR}/field_gathscat_collapseCOLLAPSE_type_module.fypp > field_gathscat_collapse${COLLAPSE}_type_module.F90
+      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/field_gathscat_collapseCOLLAPSE_type_module.fypp
+      VERBATIM)
+  list(APPEND srcs "field_gathscat_collapse${COLLAPSE}_type_module.F90")
+endforeach ()
+
 foreach (SRC IN ITEMS dev_alloc_module field_factory_module field_access_module field_gang_module field_array_module field_module 
                       field_shuffle_module field_util_module field_array_util_module field_shuffle_type_module host_alloc_module
                       field_gathscat_module field_gathscat_type_module)
